@@ -3,8 +3,8 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'  # 只有当推送标签时才会触发
-  workflow_dispatch:  # 允许手动触发工作流
+      - 'v*'  # Only trigger on version tags
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9  # 选择你需要的 Python 版本
+          python-version: 3.9  # Choose your required Python version
 
       - name: Install dependencies
         run: |
@@ -28,27 +28,33 @@ jobs:
           pip install pyinstaller
           pip install PyQt5 fonttools
 
-      - name: Build executable
-        run: |
-          pyinstaller --onefile FontConverter.py
-        env:
-          DISPLAY: ':0'  # 需要在 macOS 上运行 GUI 应用程序
-
-      - name: Archive build artifacts
+      - name: Build executable (Windows)
         if: matrix.os == 'windows-latest'
         run: |
+          pyinstaller --onefile FontConverter.py
           mkdir -p build
           mv dist/FontConverter.exe build/
-        elif: matrix.os == 'macos-latest'
+
+      - name: Build executable (macOS)
+        if: matrix.os == 'macos-latest'
         run: |
+          pyinstaller --onefile FontConverter.py
           mkdir -p build
           mv dist/FontConverter build/
 
-      - name: Upload artifact
+      - name: Upload artifact (Windows)
+        if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.os }}-FontConverter
-          path: build/
+          name: FontConverter-Windows
+          path: build/FontConverter.exe
+
+      - name: Upload artifact (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: FontConverter-macOS
+          path: build/FontConverter
 
   release:
     needs: build
@@ -57,13 +63,13 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v3
         with:
-          name: windows-latest-FontConverter
+          name: FontConverter-Windows
           path: build/windows
 
       - name: Download macOS artifact
         uses: actions/download-artifact@v3
         with:
-          name: macos-latest-FontConverter
+          name: FontConverter-macOS
           path: build/macos
 
       - name: Create release
