@@ -52,15 +52,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         arch -x86_64 pip install -r requirements.txt
-        arch -x86_64 pyinstaller --onefile --windowed --name FontConverter FontConverter.py
-        codesign --force --deep --sign - dist/FontConverter.app
-        xattr -dr com.apple.quarantine dist/FontConverter.app
+        arch -x86_64 pyinstaller --onefile --windowed --name FontConverter --distpath dist/x86 FontConverter.py
+        codesign --force --deep --sign - dist/x86/FontConverter.app
+        xattr -dr com.apple.quarantine dist/x86/FontConverter.app
 
     - name: Archive artifact
       uses: actions/upload-artifact@v2
       with:
         name: FontConverter-macOS-x86
-        path: dist/FontConverter.app
+        path: dist/x86/FontConverter.app
 
   build_macos_arm:
     runs-on: macos-latest
@@ -83,15 +83,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         arch -arm64 pip install -r requirements.txt
-        arch -arm64 pyinstaller --onefile --windowed --name FontConverter FontConverter.py
-        codesign --force --deep --sign - dist/FontConverter.app
-        xattr -dr com.apple.quarantine dist/FontConverter.app
+        arch -arm64 pyinstaller --onefile --windowed --name FontConverter --distpath dist/arm FontConverter.py
+        codesign --force --deep --sign - dist/arm/FontConverter.app
+        xattr -dr com.apple.quarantine dist/arm/FontConverter.app
 
     - name: Archive artifact
       uses: actions/upload-artifact@v2
       with:
         name: FontConverter-macOS-arm
-        path: dist/FontConverter.app
+        path: dist/arm/FontConverter.app
 
   create_release:
     runs-on: ubuntu-latest
@@ -102,19 +102,19 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: FontConverter-Windows
-        path: ./dist
+        path: ./dist/FontConverter
 
     - name: Download macOS x86 artifact
       uses: actions/download-artifact@v2
       with:
         name: FontConverter-macOS-x86
-        path: ./dist
+        path: ./dist/x86
 
     - name: Download macOS ARM artifact
       uses: actions/download-artifact@v2
       with:
         name: FontConverter-macOS-arm
-        path: ./dist
+        path: ./dist/arm
 
     - name: Create Release
       id: create_release
@@ -133,7 +133,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/FontConverter.exe
+        asset_path: ./dist/FontConverter/FontConverter.exe
         asset_name: FontConverter-Windows.exe
         asset_content_type: application/octet-stream
 
@@ -143,7 +143,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/FontConverter.app
+        asset_path: ./dist/x86/FontConverter.app
         asset_name: FontConverter-macOS-x86.app
         asset_content_type: application/octet-stream
 
@@ -153,6 +153,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/FontConverter.app
+        asset_path: ./dist/arm/FontConverter.app
         asset_name: FontConverter-macOS-arm.app
         asset_content_type: application/octet-stream
