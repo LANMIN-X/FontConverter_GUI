@@ -17,13 +17,10 @@ jobs:
       with:
         python-version: '3.8'  # 你可以根据需要更改 Python 版本
 
-    - name: Install dependencies
+    - name: Upgrade pip and install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
-        pip install pyqt5
-        pip install fonttools
-        pip install brotli
+        python -m pip install --upgrade pip==24.1.2
+        pip install pyinstaller pyqt5 fonttools brotli
 
     - name: Build executable
       run: |
@@ -47,13 +44,10 @@ jobs:
       with:
         python-version: '3.8'  # 你可以根据需要更改 Python 版本
 
-    - name: Install dependencies
+    - name: Upgrade pip and install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
-        pip install pyqt5
-        pip install fonttools
-        pip install brotli
+        python -m pip install --upgrade pip==24.1.2
+        pip install pyinstaller pyqt5 fonttools brotli
 
     - name: Build executable for x86
       run: |
@@ -77,13 +71,10 @@ jobs:
       with:
         python-version: '3.8'  # 你可以根据需要更改 Python 版本
 
-    - name: Install dependencies
+    - name: Upgrade pip and install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
-        pip install pyqt5
-        pip install fonttools
-        pip install brotli
+        python -m pip install --upgrade pip==24.1.2
+        pip install pyinstaller pyqt5 fonttools brotli
 
     - name: Build executable for ARM
       run: |
@@ -107,7 +98,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         tag_name: FontConverter_${{ github.run_id }}
         release_name: FontConverter_${{ github.run_id }}
@@ -117,7 +108,7 @@ jobs:
     - name: Upload Windows Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/FontConverter.exe
@@ -127,7 +118,7 @@ jobs:
     - name: Upload macOS x86 Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/FontConverter
@@ -137,7 +128,7 @@ jobs:
     - name: Upload macOS ARM Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/FontConverter
