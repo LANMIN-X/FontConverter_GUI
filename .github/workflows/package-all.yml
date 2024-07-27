@@ -16,20 +16,23 @@ jobs:
       with:
         python-version: '3.8'
 
-    - name: Install dependencies
+    - name: Install dependencies and build
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pyinstaller --onefile --windowed --noconsole --name FontConverter --distpath dist/win FontConverter.py
 
-    - name: Build executable
-      run: |
-        pyinstaller --onefile --name FontConverter FontConverter.py
+    - name: List dist/ directory
+      run: dir dist
+
+    - name: Create zip archive
+      run: powershell Compress-Archive -Path dist/win/* -DestinationPath dist/FontConverter-windows.zip
 
     - name: Archive artifact
       uses: actions/upload-artifact@v2
       with:
-        name: FontConverter-Windows
-        path: dist/FontConverter.exe
+        name: FontConverter-windows
+        path: dist/FontConverter-windows.zip
 
   build_macos_x86:
     runs-on: macos-latest
@@ -52,15 +55,21 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         arch -x86_64 pip install -r requirements.txt
-        arch -x86_64 pyinstaller --onefile --windowed --name FontConverter --distpath dist/x86 FontConverter.py
+        arch -x86_64 pyinstaller --onefile --windowed --noconsole --name FontConverter --distpath dist/x86 FontConverter.py
         codesign --force --deep --sign - dist/x86/FontConverter.app
         xattr -dr com.apple.quarantine dist/x86/FontConverter.app
+
+    - name: List dist/ directory
+      run: ls -R dist/
+
+    - name: Create zip archive
+      run: zip -r dist/FontConverter-macOS-x86.zip dist/x86/
 
     - name: Archive artifact
       uses: actions/upload-artifact@v2
       with:
         name: FontConverter-macOS-x86
-        path: dist/x86/FontConverter.app
+        path: dist/FontConverter-macOS-x86.zip
 
   build_macos_arm:
     runs-on: macos-latest
@@ -83,15 +92,21 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         arch -arm64 pip install -r requirements.txt
-        arch -arm64 pyinstaller --onefile --windowed --name FontConverter --distpath dist/arm FontConverter.py
+        arch -arm64 pyinstaller --onefile --windowed --noconsole --name FontConverter --distpath dist/arm FontConverter.py
         codesign --force --deep --sign - dist/arm/FontConverter.app
         xattr -dr com.apple.quarantine dist/arm/FontConverter.app
+
+    - name: List dist/ directory
+      run: ls -R dist/
+
+    - name: Create zip archive
+      run: zip -r dist/FontConverter-macOS-arm.zip dist/arm/
 
     - name: Archive artifact
       uses: actions/upload-artifact@v2
       with:
         name: FontConverter-macOS-arm
-        path: dist/arm/FontConverter.app
+        path: dist/FontConverter-macOS-arm.zip
 
   create_release:
     runs-on: ubuntu-latest
@@ -101,20 +116,20 @@ jobs:
     - name: Download Windows artifact
       uses: actions/download-artifact@v2
       with:
-        name: FontConverter-Windows
-        path: ./dist/FontConverter
+        name: FontConverter-windows
+        path: ./
 
     - name: Download macOS x86 artifact
       uses: actions/download-artifact@v2
       with:
         name: FontConverter-macOS-x86
-        path: ./dist/x86
+        path: ./
 
     - name: Download macOS ARM artifact
       uses: actions/download-artifact@v2
       with:
         name: FontConverter-macOS-arm
-        path: ./dist/arm
+        path: ./
 
     - name: Create Release
       id: create_release
@@ -133,9 +148,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/FontConverter/FontConverter.exe
-        asset_name: FontConverter-Windows.exe
-        asset_content_type: application/octet-stream
+        asset_path: ./FontConverter-windows.zip
+        asset_name: FontConverter-windows.zip
+        asset_content_type: application/zip
 
     - name: Upload macOS x86 Release Asset
       uses: actions/upload-release-asset@v1
@@ -143,9 +158,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/x86/FontConverter.app
-        asset_name: FontConverter-macOS-x86.app
-        asset_content_type: application/octet-stream
+        asset_path: ./FontConverter-macOS-x86.zip
+        asset_name: FontConverter-macOS-x86.zip
+        asset_content_type: application/zip
 
     - name: Upload macOS ARM Release Asset
       uses: actions/upload-release-asset@v1
@@ -153,6 +168,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/arm/FontConverter.app
-        asset_name: FontConverter-macOS-arm.app
-        asset_content_type: application/octet-stream
+        asset_path: ./FontConverter-macOS-arm.zip
+        asset_name: FontConverter-macOS-arm.zip
+        asset_content_type: application/zip
