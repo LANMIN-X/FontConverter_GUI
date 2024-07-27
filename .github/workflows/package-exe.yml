@@ -22,6 +22,7 @@ jobs:
         pip install pyinstaller
         pip install pyqt5
         pip install fonttools
+        pip install brotli
 
     - name: Build executable
       run: |
