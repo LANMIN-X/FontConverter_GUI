@@ -32,9 +32,9 @@ jobs:
     - name: Build executable
       run: |
         if [[ ${{ matrix.os }} == 'ubuntu-latest' || ${{ matrix.os }} == 'macos-latest' ]]; then
-          pyinstaller --onefile --noconsole font_converter.py  # 根据实际文件名修改
+          pyinstaller --onefile --noconsole FontConverte.py  # 根据实际文件名修改
         elif [[ ${{ matrix.os }} == 'windows-latest' ]]; then
-          pyinstaller --onefile --noconsole font_converter.py  # 根据实际文件名修改
+          pyinstaller --onefile --noconsole FontConverte.py  # 根据实际文件名修改
         fi
 
     - name: List files in dist directory
