@@ -34,11 +34,30 @@ jobs:
           pyinstaller --onefile --name FontConverter --noconsole FontConverter.py
         fi
 
-    - name: List files in dist directory
-      run: ls dist
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+    - name: Archive artifact
+      uses: actions/upload-artifact@v2
       with:
-        name: executable
-        path: dist/  # 将路径改为整个 dist 目录
+        name: FontConverter
+        path: dist/FontConverter.exe
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      with:
+        tag_name: FontConverter_${{ github.run_id }}
+        release_name: FontConverter_${{ github.run_id }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+    run: | ls dist/
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/FontConverter.exe
+        asset_name: FontConverter.exe
+        asset_content_type: application/octet-stream
