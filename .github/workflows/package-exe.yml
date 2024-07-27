@@ -1,7 +1,7 @@
 name: Build and Release FontConverter
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 允许手动触发工作流
 
 jobs:
   build:
@@ -14,43 +14,33 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: '3.8'  # 你可以根据需要更改 Python 版本
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller
-        pip install PyQt5
+        pip install pyqt5
         pip install fonttools
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --noconsole /FontConverter.py
+        pyinstaller --onefile --name FontConverter FontConverter.py
 
-    - name: Archive build artifacts
+    - name: Archive artifact
       uses: actions/upload-artifact@v2
       with:
         name: FontConverter
-        path: dist/
+        path: dist/FontConverter.exe
 
-  release:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: FontConverter
-        path: dist/
-
-    - name: Create GitHub Release
+    - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ github.run_id }}
-        release_name: FontConverter Release ${{ github.run_id }}
+        tag_name: FontConverter_${{ github.run_id }}
+        release_name: FontConverter_${{ github.run_id }}
         draft: false
         prerelease: false
 
@@ -61,5 +51,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/FontConverter.exe
-        asset_name: FontConverter_${{ github.run_id }}.exe
+        asset_name: FontConverter.exe
         asset_content_type: application/octet-stream
