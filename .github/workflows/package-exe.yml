@@ -25,7 +25,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --noconsole FontConverter.py
+        pyinstaller --onefile --noconsole /FontConverter.py
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v2
