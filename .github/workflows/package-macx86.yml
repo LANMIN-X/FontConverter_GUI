@@ -1,4 +1,4 @@
-name: Build and Release x86
+name: Build and Release macx86
 
 on:
   workflow_dispatch:  # 允许手动触发工作流
@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: FontConverter-macOS-x86
-        path: dist/x86/FontConverter.app
+        path: dist/x86/
 
   create_release:
     runs-on: ubuntu-latest
@@ -69,6 +69,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/x86/FontConverter.app
-        asset_name: FontConverter-macOS-x86.app
-        asset_content_type: application/octet-stream
+        asset_path: ./dist/x86
+        asset_name: FontConverter-macOS-x86.zip
+        asset_content_type: application/zip
