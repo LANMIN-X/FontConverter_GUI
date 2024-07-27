@@ -54,8 +54,12 @@ jobs:
         draft: false
         prerelease: false
 
+    - name: 查看目录
+      run: |
+        cd dist
+        ls
+        
     - name: Upload Release Asset
-    run: | ls dist/
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
