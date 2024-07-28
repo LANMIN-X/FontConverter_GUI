@@ -11,6 +11,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Set build date environment variable
+      run: echo BUILD_DATE=$(date -u +'%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -40,6 +43,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Set build date environment variable
+      run: echo BUILD_DATE=$(date -u +'%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -77,6 +83,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Set build date environment variable
+      run: echo BUILD_DATE=$(date -u +'%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
 
     - name: Set up Python
       uses: actions/setup-python@v2
