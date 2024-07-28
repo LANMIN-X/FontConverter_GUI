@@ -10,7 +10,7 @@ from fontTools.ttLib import TTFont
 from fontTools.subset import Subsetter
 from io import BytesIO
 
-class FontConverter_GUI(QMainWindow):
+class FontConverterApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("字体转换器")
@@ -73,7 +73,7 @@ class FontConverter_GUI(QMainWindow):
             font_file, _ = QFileDialog.getOpenFileName(self, "选择字体文件", "", "字体文件 (*.ttf *.otf *.woff *.woff2)")
             if font_file:
                 self.font_file = font_file
-                self.label.setText(f"已加载<br><font style='font-size: 12pt; font-weight: bold;'>{os.path.basename(self.font_file)}</font>")
+                self.label.setText(f"已加载<br><font style='font-weight: bold;'>{os.path.basename(self.font_file)}</font>")
 
     def toggle_subset_input(self, state):
         self.subset_input.setVisible(state == Qt.Checked)
@@ -104,7 +104,7 @@ class FontConverter_GUI(QMainWindow):
         files = [u.toLocalFile() for u in event.mimeData().urls()]
         if files:
             self.font_file = files[0]
-            self.label.setText(f"已加载<br><font style='font-size: 12pt; font-weight: bold;'>{os.path.basename(self.font_file)}</font>")
+            self.label.setText(f"已加载<br><font style='font-weight: bold;'>{os.path.basename(self.font_file)}</font>")
         self.label.setStyleSheet("""
             QLabel {
                 border: 2px dashed #888;
@@ -184,7 +184,7 @@ class FontConverter_GUI(QMainWindow):
 
                 progress.close()
 
-                self.label.setText(f"转换完成 <br><font style='font-size: 12pt; font-weight: bold;'> {os.path.basename(output_file)}</font>")
+                self.label.setText(f"转换完成<br><font style='font-weight: bold;'> {os.path.basename(output_file)}</font>")
             except ImportError as e:
                 self.label.setText(f"错误：{str(e)}")
             except Exception as e:
@@ -196,17 +196,18 @@ class FontConverter_GUI(QMainWindow):
       
         compile_date = "未知"
         try:
-            with open(os.path.join(sys._MEIPASS, 'compile_date.txt')) as f:
+            # Determine the base path for the application
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            with open(os.path.join(base_path, 'compile_date.txt')) as f:
                 compile_date = f.read().strip()
         except Exception:
             pass
           
-        QMessageBox.about(
-        self,"关于","""字体转换器<br>编译日期：{compile_date}<br><br> <a href="https://github.com/LANMIN-X/FontConverter_GUI/">Github</a><br><a href="https://zfont.cn">找字体</a>""")
+        QMessageBox.about(self, "关于", f"<b>字体转换器<br>编译日期：{compile_date}<br><br> <a href='https://github.com/LANMIN-X/FontConverter_GUI/'>Github</a><br><a href='https://zfont.cn'>找字体</a>")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = FontConverter_GUI()
+    window = FontConverterApp()
     window.show()
     sys.exit(app.exec_())
 
