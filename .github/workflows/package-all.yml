@@ -11,14 +11,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set build date environment variable
-      run: echo BUILD_DATE=$(date -u +'%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-
+    
+    - name: Set compile date
+      run: echo %date% > compile_date.txt
+      
     - name: Install dependencies and build
       run: |
         python -m pip install --upgrade pip
@@ -44,9 +44,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set build date environment variable
-      run: echo BUILD_DATE=$(date -u +'%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -56,6 +53,9 @@ jobs:
       run: |
         brew update
         brew install qt
+
+    - name: Set compile date
+      run: echo %date% > compile_date.txt
 
     - name: Install dependencies and build
       run: |
@@ -84,9 +84,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set build date environment variable
-      run: echo BUILD_DATE=$(date -u +'%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -96,6 +93,9 @@ jobs:
       run: |
         brew update
         brew install qt
+
+    - name: Set compile date
+      run: echo %date% > compile_date.txt
 
     - name: Install dependencies and build
       run: |
