@@ -198,7 +198,7 @@ class FontConverterApp(QMainWindow):
         try:
             # Determine the base path for the application
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-            with open(os.path.join(base_path, 'compile_date.txt')) as f:
+            with open(os.path.join(base_path, 'BuildDate.txt')) as f:
                 compile_date = f.read().strip()
         except Exception:
             pass
