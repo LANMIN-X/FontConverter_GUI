@@ -193,8 +193,16 @@ class FontConverter_GUI(QMainWindow):
             self.label.setText("请先拖放一个字体文件")
 
     def show_about_dialog(self):
+      
+        compile_date = "未知"
+        try:
+            with open(os.path.join(sys._MEIPASS, 'compile_date.txt')) as f:
+                compile_date = f.read().strip()
+        except Exception:
+            pass
+          
         QMessageBox.about(
-        self,"关于","""字体转换器<br><br> <a href="https://github.com/LANMIN-X/FontConverter_GUI/">Github</a><br><a href="https://zfont.cn">找字体</a>""")
+        self,"关于","""字体转换器<br>编译日期：{compile_date}<br><br> <a href="https://github.com/LANMIN-X/FontConverter_GUI/">Github</a><br><a href="https://zfont.cn">找字体</a>""")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
