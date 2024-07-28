@@ -15,9 +15,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-    
-    - name: Set compile date
-      run: echo %date% > compile_date.txt
       
     - name: Install dependencies and build
       run: |
@@ -25,8 +22,6 @@ jobs:
         pip install -r requirements.txt
         pyinstaller --onefile --windowed --noconsole --name FontConverter --distpath dist/win FontConverter.py
 
-    - name: List dist/ directory
-      run: dir dist
 
     - name: Create zip archive
       run: powershell Compress-Archive -Path dist/win/* -DestinationPath dist/FontConverter-windows.zip
@@ -54,9 +49,6 @@ jobs:
         brew update
         brew install qt
 
-    - name: Set compile date
-      run: echo %date% > compile_date.txt
-
     - name: Install dependencies and build
       run: |
         python -m pip install --upgrade pip
@@ -64,9 +56,6 @@ jobs:
         arch -x86_64 pyinstaller --onefile --windowed --noconsole --name FontConverter --distpath dist/x86 FontConverter.py
         codesign --force --deep --sign - dist/x86/FontConverter.app
         xattr -dr com.apple.quarantine dist/x86/FontConverter.app
-
-    - name: List dist/ directory
-      run: ls -R dist/
 
     - name: Create zip archive
       run: zip -r dist/FontConverter-macOS-x86.zip dist/x86/
@@ -94,9 +83,6 @@ jobs:
         brew update
         brew install qt
 
-    - name: Set compile date
-      run: echo %date% > compile_date.txt
-
     - name: Install dependencies and build
       run: |
         python -m pip install --upgrade pip
@@ -104,9 +90,6 @@ jobs:
         arch -arm64 pyinstaller --onefile --windowed --noconsole --name FontConverter --distpath dist/arm FontConverter.py
         codesign --force --deep --sign - dist/arm/FontConverter.app
         xattr -dr com.apple.quarantine dist/arm/FontConverter.app
-
-    - name: List dist/ directory
-      run: ls -R dist/
 
     - name: Create zip archive
       run: zip -r dist/FontConverter-macOS-arm.zip dist/arm/
