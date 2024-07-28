@@ -194,14 +194,7 @@ class FontConverterApp(QMainWindow):
 
     def show_about_dialog(self):
       
-        compile_date = "未知"
-        try:
-            # Determine the base path for the application
-            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-            with open(os.path.join(base_path, 'BuildDate.txt')) as f:
-                compile_date = f.read().strip()
-        except Exception:
-            pass
+        compile_date = "2024/07/28"
           
         QMessageBox.about(self, "关于", f"<b>字体转换器<br>编译日期：{compile_date}<br><br> <a href='https://github.com/LANMIN-X/FontConverter_GUI/'>Github</a><br><a href='https://zfont.cn'>找字体</a>")
 
