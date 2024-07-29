@@ -196,7 +196,7 @@ class FontConverterApp(QMainWindow):
 
     def show_about_dialog(self):
       
-        compile_date = "2024/07/28"
+        compile_date = "2024/07/29"
           
         QMessageBox.about(self, "关于", f"<b>字体转换器<br>编译日期：{compile_date}<br><br> <a href='https://github.com/LANMIN-X/FontConverter_GUI/'>Github</a><br><a href='https://zfont.cn'>找字体</a>")
 
