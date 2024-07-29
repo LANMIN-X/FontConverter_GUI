@@ -9,6 +9,7 @@ from PyQt5.QtGui import QMouseEvent
 from fontTools.ttLib import TTFont
 from fontTools.subset import Subsetter
 from io import BytesIO
+import qdarkstyle
 
 class FontConverterApp(QMainWindow):
     def __init__(self):
@@ -169,12 +170,13 @@ class FontConverterApp(QMainWindow):
                 # 保存为目标格式
                 if output_ext == 'woff2':
                     font.flavor = 'woff2'
-                    font.save(output_file)
                 elif output_ext == 'woff':
                     font.flavor = 'woff'
-                    font.save(output_file)
                 else:
-                    font.save(output_file)
+                    font.flavor = None
+
+                # 保存字体文件
+                font.save(output_file)
 
                 # 模拟完成过程
                 for i in range(61, 101):
@@ -200,8 +202,10 @@ class FontConverterApp(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    
+    # 应用 QDarkStyleSheet 样式
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    
     window = FontConverterApp()
     window.show()
     sys.exit(app.exec_())
-
- 
