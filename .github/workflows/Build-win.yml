@@ -23,7 +23,6 @@ jobs:
         pip install pyqt5
         pip install fonttools
         pip install brotli
-        pip install subprocess
 
     - name: Build executable
       run: |
