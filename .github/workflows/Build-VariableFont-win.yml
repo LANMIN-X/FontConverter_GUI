@@ -1,0 +1,56 @@
+name: Build-VariableFont-win
+
+on:
+  workflow_dispatch:  # 允许手动触发工作流
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  # 你可以根据需要更改 Python 版本
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install pyqt5
+        pip install fonttools
+        pip install brotli
+
+    - name: Build executable
+      run: |
+        pyinstaller --onefile --name VariableFont --noconsole VariableFont.py
+
+    - name: Archive artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: VariableFont
+        path: dist/VariableFont.exe
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      with:
+        tag_name: VariableFont_${{ github.run_id }}
+        release_name: VariableFont_${{ github.run_id }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/VariableFont.exe
+        asset_name: VariableFont.exe
+        asset_content_type: application/octet-stream
