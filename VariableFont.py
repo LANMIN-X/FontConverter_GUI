@@ -190,9 +190,9 @@ class VariableFontWeightGenerator(QMainWindow):
 
     def show_about_dialog(self):
       
-        compile_date = "2024/07/28"
+        compile_date = "2024/08/30"
           
-        QMessageBox.about(self, "关于", f"<b>可变体字重生成器<br>编译日期：{compile_date}<br><br> <a href='https://github.com/LANMIN-X/FontConverter_GUI/'>Github</a><br><a href='https://zfont.cn'>找字体</a>")
+        QMessageBox.about(self, "关于", f"<b>可变体字重生成器<br>编译日期：{compile_date}")
 
 if __name__ == '__main__':
     # 在创建 QApplication 之前设置属性
